@@ -12,215 +12,199 @@ import (
 	"time"
 )
 
-var base = "https://api.cryptowat.ch/"
-
-// cryptowatch indexes
-var indexes = map[string]string{
-	"Assets":              base + "assets",
-	"Asset":               base + "assets/%v",
-	"Pairs":               base + "pairs",
-	"Pair":                base + "pairs/%v",
-	"Exchanges":           base + "exchanges",
-	"Exchange":            base + "exchanges/%v",
-	"Markets":             base + "markets",
-	"Market":              base + "markets/%v/%v",
-	"MarketPrice":         base + "markets/%v/%v/price",
-	"MarketSummary":       base + "markets/%v/%v/summary",
-	"MarketTrades":        base + "markets/%v/%v/trades",
-	"MarketOrderBook":     base + "markets/%v/%v/orderbook",
-	"MarketOHLC":          base + "markets/%v/%v/ohlc",
-	"AggregratePrices":    base + "markets/prices",
-	"AggregrateSummaries": base + "markets/summaries",
-}
-
 // Assets returns all assets (in no particular order).
-func Assets() ([]interface{}, error) {
-	var tickers []interface{}
+func Assets() ([]Asset, error) {
+	var assets []Asset
 	res, err := request(indexes["Assets"])
 
 	if res != nil {
-		tickers = res.([]interface{})
+		json.Unmarshal(res, &assets)
 	}
-	return tickers, err
+	return assets, err
 }
 
 // AssetMarkets returns all markets which have this asset as a base or quote.
-func AssetMarkets(asset string) (map[string]interface{}, error) {
-	markets := make(map[string]interface{})
+func AssetMarkets(asset string) (DetailedAsset, error) {
+	var markets DetailedAsset
 	url := fmt.Sprintf(indexes["Asset"], asset)
 	res, err := request(url)
 
 	if res != nil {
-		markets = res.(map[string]interface{})
+		err = json.Unmarshal(res, &markets)
 	}
 	return markets, err
 }
 
 // Pairs returns all pairs (in no particular order).
-func Pairs() ([]interface{}, error) {
-	var pairs []interface{}
+func Pairs() ([]Pair, error) {
+	var pairs []Pair
 	res, err := request(indexes["Pairs"])
 
 	if res != nil {
-		pairs = res.([]interface{})
+		err = json.Unmarshal(res, &pairs)
 	}
 
 	return pairs, err
 }
 
 // PairMarkets lists all markets for this pair.
-func PairMarkets(pair string) (map[string]interface{}, error) {
-	var markets map[string]interface{}
+func PairMarkets(pair string) (PairMarket, error) {
+	var markets PairMarket
 	url := fmt.Sprintf(indexes["Pair"], pair)
 	res, err := request(url)
 
 	if res != nil {
-		markets = res.(map[string]interface{})
+		err = json.Unmarshal(res, &markets)
 	}
 
 	return markets, err
 }
 
 // Exchanges returns a list of all supported exchanges.
-func Exchanges() ([]interface{}, error) {
-	var exchanges []interface{}
+func Exchanges() ([]GeneralExchange, error) {
+	var exchanges []GeneralExchange
 	res, err := request(indexes["Exchanges"])
 
 	if res != nil {
-		exchanges = res.([]interface{})
+		err = json.Unmarshal(res, &exchanges)
 	}
 
 	return exchanges, err
 }
 
 // Exchange returns a single exchange, with associated routes.
-func Exchange(name string) (map[string]interface{}, error) {
-	var exchange map[string]interface{}
+func Exchange(name string) (DetailedExchange, error) {
+	var exchange DetailedExchange
 	url := fmt.Sprintf(indexes["Exchange"], name)
 	res, err := request(url)
 
 	if res != nil {
-		exchange = res.(map[string]interface{})
+		err = json.Unmarshal(res, &exchange)
 	}
 
 	return exchange, err
 }
 
 // Markets returns a list of all supported markets.
-func Markets() (interface{}, error) {
-	var markets interface{}
+func Markets() ([]GeneralMarket, error) {
+	var markets []GeneralMarket
 	res, err := request(indexes["Markets"])
 
 	if res != nil {
-		markets = res.([]interface{})
+		err = json.Unmarshal(res, &markets)
 	}
 
 	return markets, err
 }
 
 // Market returns a single market, with associated routes.
-func Market(exchange, pair string) (map[string]interface{}, error) {
-	var market map[string]interface{}
+func Market(exchange, pair string) (DetailedMarket, error) {
+	var market DetailedMarket
 	url := fmt.Sprintf(indexes["Market"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		market = res.(map[string]interface{})
+		err = json.Unmarshal(res, &market)
 	}
 
 	return market, err
 }
 
 // MarketPrice returns a market’s last price.
-func MarketPrice(exchange, pair string) (map[string]interface{}, error) {
-	var price map[string]interface{}
+func MarketPrice(exchange, pair string) (float64, error) {
+	var price float64
 	url := fmt.Sprintf(indexes["MarketPrice"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		price = res.(map[string]interface{})
+		var resp map[string]float64
+		err = json.Unmarshal(res, &resp)
+
+		if err == nil {
+			price = resp["price"]
+		}
 	}
 
 	return price, err
 }
 
 // MarketSummary returns a market’s last price as well as other stats based on a 24-hour sliding window.
-func MarketSummary(exchange, pair string) (map[string]interface{}, error) {
-	var summary map[string]interface{}
+func MarketSummary(exchange, pair string) (Summary, error) {
+	var summary Summary
 	url := fmt.Sprintf(indexes["MarketSummary"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		summary = res.(map[string]interface{})
+		err = json.Unmarshal(res, &summary)
 	}
 
 	return summary, err
 }
 
 // Trades returns a market’s most recent trades, incrementing chronologically.
-func Trades(exchange, pair string) ([]interface{}, error) {
-	var trades []interface{}
+func Trades(exchange, pair string) ([]Trade, error) {
+	var trades []Trade
 	url := fmt.Sprintf(indexes["MarketTrades"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		trades = res.([]interface{})
+		err = json.Unmarshal(res, &trades)
 	}
 
 	return trades, err
 }
 
 // OrderBook returns a market’s order book.
-func OrderBook(exchange, pair string) (map[string]interface{}, error) {
-	var orderbook map[string]interface{}
+func OrderBook(exchange, pair string) (MarketOrderBook, error) {
+	var orderbook MarketOrderBook
 	url := fmt.Sprintf(indexes["MarketOrderBook"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		orderbook = res.(map[string]interface{})
+		err = json.Unmarshal(res, &orderbook)
 	}
 
 	return orderbook, err
 }
 
 // Ohlc returns a market’s OHLC candlestick data. Returns data as lists of lists of numbers for each time period integer.
-func Ohlc(exchange, pair string) (map[string]interface{}, error) {
-	var ohlc map[string]interface{}
+func Ohlc(exchange, pair string) (OHLC, error) {
+	var ohlc OHLC
 	url := fmt.Sprintf(indexes["MarketOHLC"], exchange, pair)
 	res, err := request(url)
 
 	if res != nil {
-		ohlc = res.(map[string]interface{})
+		err = json.Unmarshal(res, &ohlc)
 	}
 
 	return ohlc, err
 }
 
 // AggregratePrices returns the current price for all supported markets. Some values may be out of date by a few seconds.
-func AggregratePrices() (map[string]interface{}, error) {
-	var prices map[string]interface{}
+func AggregratePrices() (AggregratePrice, error) {
+	var prices AggregratePrice
 	res, err := request(indexes["AggregratePrices"])
 
 	if res != nil {
-		prices = res.(map[string]interface{})
+		err = json.Unmarshal(res, &prices)
 	}
 
 	return prices, err
 }
 
 // AggregrateSummaries returns the market summary for all supported markets. Some values may be out of date by a few seconds.
-func AggregrateSummaries() (map[string]interface{}, error) {
-	var summaries map[string]interface{}
+func AggregrateSummaries() (AggregrateSummary, error) {
+	var summaries AggregrateSummary
 	res, err := request(indexes["AggregrateSummaries"])
 
 	if res != nil {
-		summaries = res.(map[string]interface{})
+		err = json.Unmarshal(res, &summaries)
 	}
 
 	return summaries, err
 }
 
-func request(url string) (interface{}, error) {
+func request(url string) ([]byte, error) {
 	var data interface{}
 	resp, err := http.Get(url)
 
@@ -253,6 +237,7 @@ func request(url string) (interface{}, error) {
 		message := (results["error"]).(string)
 		return nil, errors.New(message)
 	default:
-		return results["result"], err
+		results, err := json.Marshal(results["result"])
+		return results, err
 	}
 }
