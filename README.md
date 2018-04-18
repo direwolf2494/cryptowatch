@@ -242,9 +242,7 @@ type Summary struct {
 
 
 ### Trades
-Returns a market’s most recent trades, incrementing chronologically. Each Trade consists of a slice of length four (4). The attributes of each index is shown below:
-
-* `[ ID, Timestamp, Price, Amount ]`
+Returns a market’s most recent trades, incrementing chronologically. Each Trade consists of a slice of length four (4). The attributes of each index is : `[ ID, Timestamp, Price, Amount ]`
 
 - Argruments: `exch, pair string`
 - Returns: []Trade
@@ -260,8 +258,7 @@ type Trade []float64
 ```
 
 ### OrderBook
-Returns a market’s order book. Each Ask/Bid consists of a slice of length two (2). The attribute for each index is shown below:
-* `[ Price, Amount ]`
+Returns a market’s order book. Each Ask/Bid consists of a slice of length two (2). The attribute for each index is: `[ Price, Amount ]`
 
 - Arguments: `exch, pair string`
 - Returns: MarketOrderBook, error
@@ -280,7 +277,7 @@ type MarketOrderBook struct {
 ```
 
 ### Ohlc
-returns a market’s Open, High, Low, Close candlestick data. Returns data as lists of lists of numbers for each time period integer.
+Returns a market’s Open, High, Low, Close candlestick data. Returns data as lists of lists of numbers for each time period integer.
 
 - Arguments: `exch, pair string`
 - Returns: OHLC, error
@@ -290,7 +287,7 @@ exch, pair := "gdax", "ethbtc"
 ohlc, err := Ohlc(exch, pair)
 ```
 
-- Defintion:
+- OHLC Defintion:
 ```go
 type OHLC map[string][][]float64
 ```
@@ -305,7 +302,7 @@ Returns the current price for all supported markets. Some values may be out of d
 prices, err := AggregratePrices(exch, pair)
 ```
 
-- Defintion:
+- AggregratePrice Defintion:
 ```go
 type AggregratePrice map[string]float64
 ```
@@ -319,7 +316,7 @@ type AggregratePrice map[string]float64
 summaries, err := AggregrateSummaries(exch, pair)
 ```
 
-- Defintion:
+- AggregrateSummary Defintion:
 ```go
 type AggregrateSummary map[string]Summary
 ```
