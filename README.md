@@ -17,10 +17,10 @@ assets, err := Assets()
 Asset Definition:
 ```go
 type Asset struct {
-	Symbol string
-	Name   string
-	Fiat   bool
-	Route  string
+    Symbol string
+    Name   string
+    Fiat   bool
+    Route  string
 }
 ```
 
@@ -38,21 +38,21 @@ asset, err := AssetMarkets(name)
 - DetailedAsset Definition:
 ```go
 type DetailedAsset struct {
-	ID      int
-	Symbol  string
-	Name    string
-	Fiat    bool
-	Markets struct {
+    ID      int
+    Symbol  string
+    Name    string
+    Fiat    bool
+    Markets struct {
         Base  []AssetMarket
 		Quote []AssetMarket
-	}
+    }
 }
 
 type AssetMarket struct {
-	Exchange string
-	Pair     string
-	Active   bool
-	Route    string
+    Exchange string
+    Pair     string
+    Active   bool
+    Route    string
 }
 ```
 
@@ -69,7 +69,7 @@ pairs, err := Pairs()
 - Pair Definition:
 ```go
 type Pair struct {
-	Symbol string
+    Symbol string
 	ID     int
 	Base   PairData
 	Quote  PairData
@@ -77,7 +77,7 @@ type Pair struct {
 }
 
 type PairData struct {
-	Symbol string
+    Symbol string
 	Name   string
 	IsFiat bool 
 	Route  string
@@ -99,9 +99,9 @@ markets, err := PairMarkets(pair)
 - PairMarket Definition:
 ```go
 type PairMarket struct {
-	Symbol  string
+    Symbol  string
 	ID      int  
-	Base    PairData
+    Base    PairData
 	Quote   PairData
 	Route   string
 	Markets []AssetMarket
@@ -121,7 +121,7 @@ exchanges, err := Exchanges()
 - Definition:
 ```go
 type GeneralExchange struct {
-	Symbol string
+    Symbol string
 	Name   string
 	Active bool
 	Route  string
@@ -143,12 +143,12 @@ exchange, err := Exchange(name)
 - Definition:
 ```go
 type DetailedExchange struct {
-	ID     int
+    ID     int
 	Name   string
 	Active bool
 	Routes struct {
 		Markets string
-	}
+    }
 }
 ```
 
@@ -166,7 +166,7 @@ markets, err := Markets()
 - GeneralMarket Definition:
 ```go
 type GeneralMarket struct {
-	Exchange string
+    Exchange string
 	Pair     string
 	Active   bool   
 	Route    string
@@ -188,7 +188,7 @@ market, err := Market(exch, pair)
 - DetailedMarket Definition:
 ```go
 type DetailedMarket struct {
-	Exchange string
+    Exchange string
 	Pair     string 
 	Active   bool
 	Routes   struct {
@@ -227,7 +227,7 @@ summary, err := MarketSummary(exch, pair)
 - Summary Definition:
 ```go
 type Summary struct {
-	Price struct {
+    Price struct {
 		Last   float64
 		High   float64
 		Low    float64
@@ -274,7 +274,7 @@ orderbook, err := OrderBook(exch, pair)
 - MarketOrderBook Defintion:
 ```go
 type MarketOrderBook struct {
-	Asks [][]float64
+    Asks [][]float64
 	Bids [][]float64
 }
 ```
@@ -322,7 +322,6 @@ summaries, err := AggregrateSummaries(exch, pair)
 - Defintion:
 ```go
 type AggregrateSummary map[string]Summary
-
 ```
 
 *N.B.* This project is licensed under the terms of the MIT license.
