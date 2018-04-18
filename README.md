@@ -1,4 +1,4 @@
-# Crytowatch
+# Cryptowatch
 This go package acts as a wrapper to the various Cryptowatch REST API endpoints found (here | https://cryptowat.ch/docs/api). The returned data is captured and parsed as structs that can be used in any other go package.
 
 
