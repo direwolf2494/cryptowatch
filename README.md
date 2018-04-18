@@ -44,7 +44,7 @@ type DetailedAsset struct {
     Fiat    bool
     Markets struct {
         Base  []AssetMarket
-		Quote []AssetMarket
+	Quote []AssetMarket
     }
 }
 
@@ -70,17 +70,17 @@ pairs, err := Pairs()
 ```go
 type Pair struct {
     Symbol string
-	ID     int
-	Base   PairData
-	Quote  PairData
-	Route  string
+    ID     int
+    Base   PairData
+    Quote  PairData
+    Route  string
 }
 
 type PairData struct {
     Symbol string
-	Name   string
-	IsFiat bool 
-	Route  string
+    Name   string
+    IsFiat bool 
+    Route  string
 }
 
 ```
@@ -100,11 +100,11 @@ markets, err := PairMarkets(pair)
 ```go
 type PairMarket struct {
     Symbol  string
-	ID      int  
+    ID      int  
     Base    PairData
-	Quote   PairData
-	Route   string
-	Markets []AssetMarket
+    Quote   PairData
+    Route   string
+    Markets []AssetMarket
 }
 ```
 
@@ -122,9 +122,9 @@ exchanges, err := Exchanges()
 ```go
 type GeneralExchange struct {
     Symbol string
-	Name   string
-	Active bool
-	Route  string
+    Name   string
+    Active bool
+    Route  string
 }
 ```
 
@@ -144,10 +144,10 @@ exchange, err := Exchange(name)
 ```go
 type DetailedExchange struct {
     ID     int
-	Name   string
-	Active bool
-	Routes struct {
-		Markets string
+    Name   string
+    Active bool
+    Routes struct {
+	Markets string
     }
 }
 ```
@@ -167,9 +167,9 @@ markets, err := Markets()
 ```go
 type GeneralMarket struct {
     Exchange string
-	Pair     string
-	Active   bool   
-	Route    string
+    Pair     string
+    Active   bool   
+    Route    string
 }
 ```
 
@@ -189,15 +189,15 @@ market, err := Market(exch, pair)
 ```go
 type DetailedMarket struct {
     Exchange string
-	Pair     string 
-	Active   bool
-	Routes   struct {
-		Price     string
-		Summary   string
-		Orderbook string
-		Trades    string
-		Ohlc      string
-	}
+    Pair     string 
+    Active   bool
+    Routes   struct {
+	Price     string
+	Summary   string
+	Orderbook string
+	Trades    string
+	Ohlc      string
+    }
 }
 ```
 
@@ -228,15 +228,15 @@ summary, err := MarketSummary(exch, pair)
 ```go
 type Summary struct {
     Price struct {
-		Last   float64
-		High   float64
-		Low    float64
-		Change struct {
-			Percentage float64
-			Absolute   float64
-		}
+	Last   float64
+	High   float64
+	Low    float64
+	Change struct {
+	    Percentage float64	
+	    Absolute   float64
 	}
-	Volume float64
+    }
+    Volume float64
 }
 ```
 
@@ -275,7 +275,7 @@ orderbook, err := OrderBook(exch, pair)
 ```go
 type MarketOrderBook struct {
     Asks [][]float64
-	Bids [][]float64
+    Bids [][]float64
 }
 ```
 
